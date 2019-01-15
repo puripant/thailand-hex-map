@@ -1,0 +1,51 @@
+<html>
+<head>
+  <title>มาอวดจังหวัดที่เคยไปกัน!</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- for Google -->
+  <meta name="description" content="พิมพ์ชื่อจังหวัดที่เคยไป แล้วแสดงเป็นแผนที่ไปอวดเพื่อนได้เลย! เมืองไทยมีที่เที่ยวมากมาย น้ำตก ทะเล ภูเขา เที่ยวไทย ไม่ไปไม่รู้" />
+  <meta name="keywords" content="map, visualization, choropleth, thailand, travel, แผนที่, ท่องเที่ยว, เที่ยวไทย, จังหวัด" />
+  <meta name="author" content="Boonmee Lab" />
+
+  <!-- for Facebook -->
+  <meta property="og:title" content="มาอวดจังหวัดที่เคยไปกัน!" />
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://puripant.ruchikachorn.com/thai-provinces-visited/thumbnail.jpg" />
+  <meta property="og:url" content="http://puripant.ruchikachorn.com/thai-provinces-visited/" />
+  <meta property="og:description" content="พิมพ์ชื่อจังหวัดที่เคยไป แล้วแสดงเป็นแผนที่ไปอวดเพื่อนได้เลย! เมืองไทยมีที่เที่ยวมากมาย น้ำตก ทะเล ภูเขา เที่ยวไทย ไม่ไปไม่รู้" />
+
+  <!-- for Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="มาอวดจังหวัดที่เคยไปกัน!" />
+  <meta name="twitter:description" content="พิมพ์ชื่อจังหวัดที่เคยไป แล้วแสดงเป็นแผนที่ไปอวดเพื่อนได้เลย! เมืองไทยมีที่เที่ยวมากมาย น้ำตก ทะเล ภูเขา เที่ยวไทย ไม่ไปไม่รู้" />
+  <meta name="twitter:image" content="http://puripant.ruchikachorn.com/thai-provinces-visited/thumbnail.jpg" />
+
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css">
+	<link href="main.css" rel="stylesheet">
+</head>
+<body>
+	<div id="input">
+		<select id="provinces" class="ui fluid search dropdown" multiple="">
+			<option value="">เลือกจังหวัดที่เคยไป …</option>
+		</select>
+	</div>
+	<div id="result"></div>
+
+	<div id="credit">
+		สร้างสรรค์โดย
+    <div class="logo boonmeelab"><a href="https://www.facebook.com/BoonmeeLab/"><span></span></a></div>
+  </div>
+
+	<!--  Adapted from https://gist.github.com/michellechandra/0b2ce4923dc9b5809922 -->
+  <script src="http://d3js.org/d3.v5.min.js"></script>
+  <script src="https://unpkg.com/topojson@3"></script>
+	<script
+	  src="https://code.jquery.com/jquery-3.1.1.min.js"
+	  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+	  crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
+	<script src="main.js"></script>
+</body>
+</html>

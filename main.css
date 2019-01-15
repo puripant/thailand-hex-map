@@ -1,0 +1,65 @@
+/* On mouse hover, lighten state color */
+path:hover {
+	fill-opacity: .7;
+}
+
+/* Style for Custom Tooltip */
+div.tooltip {
+ 	position: absolute;
+	display: inline-block;
+	text-align: left;
+	line-height: 20px;
+	/*width: 100%;*/
+	height: 30px;
+	padding: 5px 10px;
+	background: white;
+	border: 0px;
+	border-radius: 5px;
+	pointer-events: none;
+}
+
+body {
+	font: 12px sans-serif;
+}
+
+#input, #result {
+	width: 400px;
+	margin: 0 auto;
+}
+
+.legend {
+	position: relative;
+	left: 250px;
+	top: 480px;
+	margin-bottom: -100px;
+}
+
+#credit {
+	text-align: center;
+}
+.logo {
+  position: relative;
+  display: inline-block;
+  height: 50px;
+  line-height: 50px;
+  vertical-align: middle;
+  background-size: cover;
+  background-repeat:no-repeat;
+  background-position: center center;
+}
+.logo a span {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+.boonmeelab {
+  background-image: url('logo_boonmeelab.png');
+  width: 150px;
+}
+
+.ui.search.dropdown .menu {
+	max-height: calc(480px - 100%);
+}
