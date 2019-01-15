@@ -1,2 +1,3 @@
-# thailand_hex_map
-Hex map of Thailand
+# Hex map of Thailand
+
+Manually designed.
