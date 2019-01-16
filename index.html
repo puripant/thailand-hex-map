@@ -1,34 +1,35 @@
 <html>
 <head>
-  <title>มาอวดจังหวัดที่เคยไปกัน!</title>
+  <title>Hex Map of Thailand</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- for Google -->
-  <meta name="description" content="พิมพ์ชื่อจังหวัดที่เคยไป แล้วแสดงเป็นแผนที่ไปอวดเพื่อนได้เลย! เมืองไทยมีที่เที่ยวมากมาย น้ำตก ทะเล ภูเขา เที่ยวไทย ไม่ไปไม่รู้" />
-  <meta name="keywords" content="map, visualization, choropleth, thailand, travel, แผนที่, ท่องเที่ยว, เที่ยวไทย, จังหวัด" />
+  <meta name="description" content="พิมพ์ชื่อจังหวัด แล้วแสดงเป็นแผนที่รูปหกเหลี่ยมไปอวดเพื่อนได้เลย!" />
+  <meta name="keywords" content="hexmap, map, visualization, choropleth, thailand, แผนที่, จังหวัด, รูปหกเหลี่ยม, ประเทศไทย, ไทย" />
   <meta name="author" content="Boonmee Lab" />
 
   <!-- for Facebook -->
-  <meta property="og:title" content="มาอวดจังหวัดที่เคยไปกัน!" />
+  <meta property="og:title" content="Hex Map of Thailand" />
   <meta property="og:type" content="article" />
-  <meta property="og:image" content="http://puripant.ruchikachorn.com/thai-provinces-visited/thumbnail.jpg" />
-  <meta property="og:url" content="http://puripant.ruchikachorn.com/thai-provinces-visited/" />
-  <meta property="og:description" content="พิมพ์ชื่อจังหวัดที่เคยไป แล้วแสดงเป็นแผนที่ไปอวดเพื่อนได้เลย! เมืองไทยมีที่เที่ยวมากมาย น้ำตก ทะเล ภูเขา เที่ยวไทย ไม่ไปไม่รู้" />
+  <meta property="og:image" content="http://puripant.ruchikachorn.com/thailand_hex_map/thumbnail.jpg" />
+  <meta property="og:url" content="http://puripant.ruchikachorn.com/thailand_hex_map/" />
+  <meta property="og:description" content="พิมพ์ชื่อจังหวัด แล้วแสดงเป็นแผนที่รูปหกเหลี่ยมไปอวดเพื่อนได้เลย!" />
 
   <!-- for Twitter -->
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="มาอวดจังหวัดที่เคยไปกัน!" />
-  <meta name="twitter:description" content="พิมพ์ชื่อจังหวัดที่เคยไป แล้วแสดงเป็นแผนที่ไปอวดเพื่อนได้เลย! เมืองไทยมีที่เที่ยวมากมาย น้ำตก ทะเล ภูเขา เที่ยวไทย ไม่ไปไม่รู้" />
-  <meta name="twitter:image" content="http://puripant.ruchikachorn.com/thai-provinces-visited/thumbnail.jpg" />
+  <meta name="twitter:title" content="Hex Map of Thailand" />
+  <meta name="twitter:description" content="พิมพ์ชื่อจังหวัด แล้วแสดงเป็นแผนที่รูปหกเหลี่ยมไปอวดเพื่อนได้เลย!" />
+  <meta name="twitter:image" content="http://puripant.ruchikachorn.com/thailand_hex_map/thumbnail.jpg" />
 
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css">
 	<link href="main.css" rel="stylesheet">
 </head>
+
 <body>
 	<div id="input">
 		<select id="provinces" class="ui fluid search dropdown" multiple="">
-			<option value="">เลือกจังหวัดที่เคยไป …</option>
+			<option value="">เลือกจังหวัด …</option>
 		</select>
 	</div>
 	<div id="result"></div>

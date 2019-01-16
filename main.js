@@ -19,28 +19,28 @@ let color = d3.scaleLinear()
   .domain([0, 1])
   .range(["gainsboro", "#eb307c"]);
 
-let legendText = ["เคยไป", "ไม่เคยไป"];
+// let legendText = ["เคยไป", "ไม่เคยไป"];
 
-// Modified Legend Code from Mike Bostock: http://bl.ocks.org/mbostock/3888852
-let legend = d3.select("#result").append("svg")
-    .attr("class", "legend")
-    .attr("width", 140)
-    .attr("height", 100)
-    .selectAll("g")
-  .data(color.domain().slice().reverse())
-    .enter()
-    .append("g")
-    .attr("transform", (d, i) => `translate(0,${i * 20})`);
-legend.append("rect")
-  .attr("width", 18)
-  .attr("height", 18)
-  .style("fill", color);
-legend.append("text")
-  .data(legendText)
-    .attr("x", 24)
-    .attr("y", 9)
-    .attr("dy", ".35em")
-    .text(d => d);
+// // Modified Legend Code from Mike Bostock: http://bl.ocks.org/mbostock/3888852
+// let legend = d3.select("#result").append("svg")
+//     .attr("class", "legend")
+//     .attr("width", 140)
+//     .attr("height", 100)
+//     .selectAll("g")
+//   .data(color.domain().slice().reverse())
+//     .enter()
+//     .append("g")
+//     .attr("transform", (d, i) => `translate(0,${i * 20})`);
+// legend.append("rect")
+//   .attr("width", 18)
+//   .attr("height", 18)
+//   .style("fill", color);
+// legend.append("text")
+//   .data(legendText)
+//   .attr("x", 24)
+//   .attr("y", 9)
+//   .attr("dy", ".35em")
+//   .text(d => d);
 
 //Create SVG element and append map to the SVG
 let svg = d3.select("#result")
