@@ -5,6 +5,11 @@ body {
   margin-top: 50px;
 }
 
+a:link, a:visited, a:hover, a:active {
+  font-size: 1.8em;
+  color: #eb307c;
+}
+
 /* On mouse hover, lighten state color */
 path:hover {
 	fill-opacity: .7;
@@ -26,7 +31,7 @@ div.tooltip {
 }
 
 #input, #result {
-	width: 400px;
+	width: 320px;
 	margin: 0 auto;
 }
 

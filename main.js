@@ -1,6 +1,6 @@
 //Width and height of map
-let width = 400;
-let height = 700;
+let width = 320;
+let height = 600;
 
 // D3 Projection
 let projection = d3.geoAlbers()
@@ -42,18 +42,28 @@ let color = d3.scaleLinear()
 //   .attr("dy", ".35em")
 //   .text(d => d);
 
-//Create SVG element and append map to the SVG
-let svg = d3.select("#result")
-  .append("svg")
-  .attr("class", "map")
+//Create and append canvas
+let canvas = d3.select("#result").append("canvas")
+  .attr("id", "map")
   .attr("width", width)
   .attr("height", height);
+let ctx = document.getElementById("map").getContext("2d");
 
-// Append Div for tooltip to SVG
-let tooltip = d3.select("body")
-  .append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+//For downloading canvas from https://stackoverflow.com/questions/12796513/html5-canvas-to-png-file
+function download_canvas(el) {
+  let url = document.getElementById("map").toDataURL("image/png");
+
+  // url = url.replace("image/png", "image/octet-stream");
+  url = url.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
+  url = url.replace(/^data:application\/octet-stream/, 'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=Canvas.png');
+
+  el.href = url;
+};
+
+// Append div for tooltip
+let tooltip = d3.select("body").append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 0);
 
 // adapted from d3 hexbin
 let hex = function (coordinates, [x0, y0], [dx, dy], radius) {
@@ -204,31 +214,61 @@ let updateGeo = function (province, visited) {
   }
 }
 let updateMap = function () {
-  svg.selectAll("path")
-    .style("fill", function (d) {
-      let value = d.properties.visited;
-      return value ? color(value) : "gainsboro";
-    })
-    // .transition()
-    // .duration(2000)
-    .attr("d", function (d) {
-      let coords = d.geometry.coordinates[0];
-      if (coords.length == 1) { //find the biggest part in each province
-        let max_length = -1;
-        let max_i = -1;
-        for (let i = 0; i < d.geometry.coordinates.length; i++) {
-          if (max_length < d.geometry.coordinates[i][0].length) {
-            max_length = d.geometry.coordinates[i][0].length;
-            max_i = i;
-          }
+  for (let i = 0; i < geo.length; i++) {
+    let d = geo[i];
+    let coords = d.geometry.coordinates[0];
+    if (coords.length == 1) { //find the biggest part in each province
+      let max_length = -1;
+      let max_i = -1;
+      for (let i = 0; i < d.geometry.coordinates.length; i++) {
+        if (max_length < d.geometry.coordinates[i][0].length) {
+          max_length = d.geometry.coordinates[i][0].length;
+          max_i = i;
         }
-        coords = d.geometry.coordinates[max_i][0];
       }
-      // let circleCoords = circle(coords.map(function (coord) { return projection(coord); }));
-      let hexCenter = thaiHexMap.find(h => h.id === +d.properties.ISO);
-      let hexCoords = hex(coords.map(coord => projection(coord)), [hexCenter.x, hexCenter.y], [80, 50], 20);
-      return "M" + hexCoords.join("L") + "Z";
-    });
+      coords = d.geometry.coordinates[max_i][0];
+    }
+    let hexCenter = thaiHexMap.find(h => h.id === +d.properties.ISO);
+    let hexCoords = hex(coords.map(coord => projection(coord)), [hexCenter.x, hexCenter.y], [50, 50], 18);
+    // return "M" + hexCoords.join("L") + "Z";
+
+    ctx.beginPath();
+    ctx.fillStyle = d.properties.visited ? color(d.properties.visited) : "#dcdcdc";
+    for (let j = 0; j < hexCoords.length; j++) {
+      if (j === 0) {
+        ctx.moveTo(hexCoords[j][0], hexCoords[j][1]);
+      } else {
+        ctx.lineTo(hexCoords[j][0], hexCoords[j][1]);
+      }
+    }
+    ctx.fill();
+  }
+
+  // ctx.selectAll("path")
+  //   .style("fill", function (d) {
+  //     let value = d.properties.visited;
+  //     return value ? color(value) : "gainsboro";
+  //   })
+  //   // .transition()
+  //   // .duration(2000)
+  //   .attr("d", function (d) {
+  //     let coords = d.geometry.coordinates[0];
+  //     if (coords.length == 1) { //find the biggest part in each province
+  //       let max_length = -1;
+  //       let max_i = -1;
+  //       for (let i = 0; i < d.geometry.coordinates.length; i++) {
+  //         if (max_length < d.geometry.coordinates[i][0].length) {
+  //           max_length = d.geometry.coordinates[i][0].length;
+  //           max_i = i;
+  //         }
+  //       }
+  //       coords = d.geometry.coordinates[max_i][0];
+  //     }
+  //     // let circleCoords = circle(coords.map(function (coord) { return projection(coord); }));
+  //     let hexCenter = thaiHexMap.find(h => h.id === +d.properties.ISO);
+  //     let hexCoords = hex(coords.map(coord => projection(coord)), [hexCenter.x, hexCenter.y], [80, 50], 20);
+  //     return "M" + hexCoords.join("L") + "Z";
+  //   });
 }
 
 let provinces;
@@ -273,37 +313,40 @@ d3.csv("data/provinces-visited.csv").then(function(data) {
       updateGeo(d.province, d.visited);
     });
 
-    // Bind the data to the SVG and create one path per GeoJSON feature
-    svg.selectAll("path")
-        .data(geo)
-      .enter()
-        .append("path")
-        // .attr("d", path)
-        .style("stroke", "#fff")
-        .style("stroke-width", "1")
-        .on("mouseover", function (d) {
-          tooltip.transition()
-            .duration(200)
-            .style("opacity", 0.8);
-          tooltip.html(findProvinceTH(d.properties.NAME_1))
-            .style("left", (d3.event.pageX) + "px")
-            .style("top", (d3.event.pageY - 30) + "px");
-        })
-        .on("mouseout", function (d) {
-          tooltip.transition()
-            .duration(500)
-            .style("opacity", 0);
-        })
-        .on("click", function (d) {
-          if (updateGeo(d.properties.NAME_1) == 0) {
-            $("#provinces").dropdown("set selected", d.properties.NAME_1);
-            updateGeo(d.properties.NAME_1, 1);
-          } else {
-            $("#provinces").dropdown("remove selected", d.properties.NAME_1);
-            updateGeo(d.properties.NAME_1, 0);
-          }
-          updateMap();
-        });
+    canvas.on("click", function() {
+
+    })
+    // // Bind the data to the SVG and create one path per GeoJSON feature
+    // ctx.selectAll("path")
+    //     .data(geo)
+    //   .enter()
+    //     .append("path")
+    //     // .attr("d", path)
+    //     .style("stroke", "#fff")
+    //     .style("stroke-width", "1")
+    //     .on("mouseover", function (d) {
+    //       tooltip.transition()
+    //         .duration(200)
+    //         .style("opacity", 0.8);
+    //       tooltip.html(findProvinceTH(d.properties.NAME_1))
+    //         .style("left", (d3.event.pageX) + "px")
+    //         .style("top", (d3.event.pageY - 30) + "px");
+    //     })
+    //     .on("mouseout", function (d) {
+    //       tooltip.transition()
+    //         .duration(500)
+    //         .style("opacity", 0);
+    //     })
+    //     .on("click", function (d) {
+    //       if (updateGeo(d.properties.NAME_1) == 0) {
+    //         $("#provinces").dropdown("set selected", d.properties.NAME_1);
+    //         updateGeo(d.properties.NAME_1, 1);
+    //       } else {
+    //         $("#provinces").dropdown("remove selected", d.properties.NAME_1);
+    //         updateGeo(d.properties.NAME_1, 0);
+    //       }
+    //       updateMap();
+    //     });
     updateMap();
   });
 // })
