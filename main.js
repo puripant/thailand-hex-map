@@ -53,9 +53,9 @@ let ctx = document.getElementById("map").getContext("2d");
 function download_canvas(el) {
   let url = document.getElementById("map").toDataURL("image/png");
 
-  // url = url.replace("image/png", "image/octet-stream");
-  url = url.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
-  url = url.replace(/^data:application\/octet-stream/, 'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=Canvas.png');
+  url = url.replace("image/png", "image/octet-stream");
+  // url = url.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
+  // url = url.replace(/^data:application\/octet-stream/, 'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=Canvas.png');
 
   el.href = url;
 };
