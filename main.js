@@ -10,37 +10,10 @@ let projection = d3.geoAlbers()
   .scale(1200 * 2)
   .translate([-100, 200]);
 
-// // Define path generator
-// let path = d3.geoPath() // path generator that will convert GeoJSON to SVG paths
-//   .projection(projection); // tell path generator to use albersUsa projection
-
 // Define linear scale for output
 let color = d3.scaleLinear()
   .domain([0, 1])
   .range(["gainsboro", "#eb307c"]);
-
-// let legendText = ["เคยไป", "ไม่เคยไป"];
-
-// // Modified Legend Code from Mike Bostock: http://bl.ocks.org/mbostock/3888852
-// let legend = d3.select("#result").append("svg")
-//     .attr("class", "legend")
-//     .attr("width", 140)
-//     .attr("height", 100)
-//     .selectAll("g")
-//   .data(color.domain().slice().reverse())
-//     .enter()
-//     .append("g")
-//     .attr("transform", (d, i) => `translate(0,${i * 20})`);
-// legend.append("rect")
-//   .attr("width", 18)
-//   .attr("height", 18)
-//   .style("fill", color);
-// legend.append("text")
-//   .data(legendText)
-//   .attr("x", 24)
-//   .attr("y", 9)
-//   .attr("dy", ".35em")
-//   .text(d => d);
 
 //Create and append canvas
 let canvas = d3.select("#result").append("canvas")
@@ -66,40 +39,16 @@ let tooltip = d3.select("body").append("div")
   .style("opacity", 0);
 
 // adapted from d3 hexbin
-let hex = function (coordinates, [x0, y0], [dx, dy], radius) {
-  const num = coordinates.length;
-  if (num >= 6) {
-    const numPerSide = Math.floor(num / 6);
-    const remainder = num - (numPerSide * 6);
+let hex = function ([x0, y0], radius) {
+  const thirdPi = Math.PI / 6;
+  const angles = [thirdPi, thirdPi * 3, thirdPi * 5, thirdPi * 7, thirdPi * 9, thirdPi * 11];
 
-    const thirdPi = Math.PI / 6;
-    const angles = [thirdPi, thirdPi * 3, thirdPi * 5, thirdPi * 7, thirdPi * 9, thirdPi * 11];
-
-    x0 = (x0 - ((y0 % 2 === 0) ? 0.5 : 0)) * radius * Math.sqrt(3);
-    y0 *= radius * 3 / 2;
-
-    //find the closest angle to offset
-    const centroid = d3.polygonCentroid(coordinates);
-    const angleOffset = Math.atan2(coordinates[0][1] - centroid[1], coordinates[0][0] - centroid[0]);
-    const angles2 = angles.map(a => Math.abs((a - angleOffset) % (2 * Math.PI)));
-    const indexOffset = angles2.indexOf(d3.min(angles2));
-
-    let corners = angles.map(function (angle) {
-      let x1 = Math.cos(angle) * radius;
-      let y1 = Math.sin(angle) * radius;
-      return [dx + x0 + x1, dy + y0 + y1];
-    });
-    let hex = [];
-    for (let i = indexOffset; i < indexOffset + 6; i++) {
-      let n = numPerSide + ((i % 6 < remainder) ? 1 : 0);
-      for (let j = 0; j < n; j++) {
-        hex.push(d3.interpolateArray(corners[i % 6], corners[(i + 1) % 6])(j / n));
-      }
-    }
-    return hex;
-  } else {
-    return [];
-  }
+  let corners = angles.map(function (angle) {
+    let x1 = Math.cos(angle) * radius;
+    let y1 = Math.sin(angle) * radius;
+    return [x0 + x1, y0 + y1];
+  });
+  return corners;
 }
 const thaiHexMap = [
   { id: 57, y: 0, x: 2 },
@@ -213,6 +162,7 @@ let updateGeo = function (province, visited) {
     }
   }
 }
+let hexCenters = [];
 let updateMap = function () {
   for (let i = 0; i < geo.length; i++) {
     let d = geo[i];
@@ -228,9 +178,19 @@ let updateMap = function () {
       }
       coords = d.geometry.coordinates[max_i][0];
     }
+
+    let radius = 18;
     let hexCenter = thaiHexMap.find(h => h.id === +d.properties.ISO);
-    let hexCoords = hex(coords.map(coord => projection(coord)), [hexCenter.x, hexCenter.y], [50, 50], 18);
-    // return "M" + hexCoords.join("L") + "Z";
+    let c = [(hexCenter.x - ((hexCenter.y % 2 === 0) ? 0.5 : 0)) * radius * Math.sqrt(3) + 50, hexCenter.y * radius * 3 / 2 + 50];
+    hexCenters.push({
+      id: hexCenter.id,
+      cx: c[0],
+      cy: c[1],
+      name: d.properties.NAME_1,
+      name_th: findProvinceTH(d.properties.NAME_1)
+    });
+
+    let hexCoords = hex(c, radius);
 
     ctx.beginPath();
     ctx.fillStyle = d.properties.visited ? color(d.properties.visited) : "#dcdcdc";
@@ -243,32 +203,6 @@ let updateMap = function () {
     }
     ctx.fill();
   }
-
-  // ctx.selectAll("path")
-  //   .style("fill", function (d) {
-  //     let value = d.properties.visited;
-  //     return value ? color(value) : "gainsboro";
-  //   })
-  //   // .transition()
-  //   // .duration(2000)
-  //   .attr("d", function (d) {
-  //     let coords = d.geometry.coordinates[0];
-  //     if (coords.length == 1) { //find the biggest part in each province
-  //       let max_length = -1;
-  //       let max_i = -1;
-  //       for (let i = 0; i < d.geometry.coordinates.length; i++) {
-  //         if (max_length < d.geometry.coordinates[i][0].length) {
-  //           max_length = d.geometry.coordinates[i][0].length;
-  //           max_i = i;
-  //         }
-  //       }
-  //       coords = d.geometry.coordinates[max_i][0];
-  //     }
-  //     // let circleCoords = circle(coords.map(function (coord) { return projection(coord); }));
-  //     let hexCenter = thaiHexMap.find(h => h.id === +d.properties.ISO);
-  //     let hexCoords = hex(coords.map(coord => projection(coord)), [hexCenter.x, hexCenter.y], [80, 50], 20);
-  //     return "M" + hexCoords.join("L") + "Z";
-  //   });
 }
 
 let provinces;
@@ -313,41 +247,50 @@ d3.csv("data/provinces-visited.csv").then(function(data) {
       updateGeo(d.province, d.visited);
     });
 
-    canvas.on("click", function() {
+    let blue;
+    let closest_hex;
+    canvas.on("mousemove", function() {
+      let mouseX = d3.event.layerX || d3.event.offsetX;
+      let mouseY = d3.event.layerY || d3.event.offsety;
 
+      // tooltip off first
+      tooltip.transition()
+        .duration(500)
+        .style("opacity", 0);
+
+      blue = ctx.getImageData(mouseX, mouseY, 1, 1).data[2]; // check blue color
+      if (blue > 0) { // map area
+        let closest_dist = Number.MAX_SAFE_INTEGER;
+        hexCenters.forEach(hex => {
+          let dist = Math.abs((hex.cx - mouseX) * (hex.cx - mouseX) + (hex.cy - mouseY) * (hex.cy - mouseY));
+          if (dist < closest_dist) {
+            closest_dist = dist;
+            closest_hex = hex;
+          }
+        });
+
+        // tooltip on in the map
+        tooltip.transition()
+          .duration(200)
+          .style("opacity", 0.8);
+        tooltip.html(closest_hex.name_th)
+          .style("left", d3.event.pageX + "px")
+          .style("top", (d3.event.pageY - 30) + "px");
+      }
     })
-    // // Bind the data to the SVG and create one path per GeoJSON feature
-    // ctx.selectAll("path")
-    //     .data(geo)
-    //   .enter()
-    //     .append("path")
-    //     // .attr("d", path)
-    //     .style("stroke", "#fff")
-    //     .style("stroke-width", "1")
-    //     .on("mouseover", function (d) {
-    //       tooltip.transition()
-    //         .duration(200)
-    //         .style("opacity", 0.8);
-    //       tooltip.html(findProvinceTH(d.properties.NAME_1))
-    //         .style("left", (d3.event.pageX) + "px")
-    //         .style("top", (d3.event.pageY - 30) + "px");
-    //     })
-    //     .on("mouseout", function (d) {
-    //       tooltip.transition()
-    //         .duration(500)
-    //         .style("opacity", 0);
-    //     })
-    //     .on("click", function (d) {
-    //       if (updateGeo(d.properties.NAME_1) == 0) {
-    //         $("#provinces").dropdown("set selected", d.properties.NAME_1);
-    //         updateGeo(d.properties.NAME_1, 1);
-    //       } else {
-    //         $("#provinces").dropdown("remove selected", d.properties.NAME_1);
-    //         updateGeo(d.properties.NAME_1, 0);
-    //       }
-    //       updateMap();
-    //     });
+    .on("click", function () {
+      if (blue > 0) { // map area
+        if (blue > 200) { // unselected
+          $("#provinces").dropdown("set selected", closest_hex.name);
+          updateGeo(closest_hex.name, 1);
+        } else { // already selected
+          $("#provinces").dropdown("remove selected", closest_hex.name);
+          updateGeo(closest_hex.name, 0);
+        }
+        updateMap();
+      }
+    });
+
     updateMap();
   });
-// })
 });
