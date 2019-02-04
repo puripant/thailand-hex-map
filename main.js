@@ -2,14 +2,6 @@
 let width = 320;
 let height = 600;
 
-// D3 Projection
-let projection = d3.geoAlbers()
-  .center([100.0, 13.5])
-  .rotate([0, 24])
-  .parallels([5, 21])
-  .scale(1200 * 2)
-  .translate([-100, 200]);
-
 // Define linear scale for output
 let color = d3.scaleLinear()
   .domain([0, 1])
@@ -164,24 +156,15 @@ let updateGeo = function (province, visited) {
 }
 let hexCenters = [];
 let updateMap = function () {
+  ctx.clearRect(0, 0, width, height);
+
   for (let i = 0; i < geo.length; i++) {
     let d = geo[i];
-    let coords = d.geometry.coordinates[0];
-    if (coords.length == 1) { //find the biggest part in each province
-      let max_length = -1;
-      let max_i = -1;
-      for (let i = 0; i < d.geometry.coordinates.length; i++) {
-        if (max_length < d.geometry.coordinates[i][0].length) {
-          max_length = d.geometry.coordinates[i][0].length;
-          max_i = i;
-        }
-      }
-      coords = d.geometry.coordinates[max_i][0];
-    }
 
     let radius = 18;
     let hexCenter = thaiHexMap.find(h => h.id === +d.properties.ISO);
-    let c = [(hexCenter.x - ((hexCenter.y % 2 === 0) ? 0.5 : 0)) * radius * Math.sqrt(3) + 50, hexCenter.y * radius * 3 / 2 + 50];
+    let c = [(hexCenter.x - ((hexCenter.y % 2 === 0) ? 0.5 : 0)) * radius * Math.sqrt(3) + 50, hexCenter.y * radius * 3 / 2 + (radius*2)];
+
     hexCenters.push({
       id: hexCenter.id,
       cx: c[0],
@@ -191,16 +174,9 @@ let updateMap = function () {
     });
 
     let hexCoords = hex(c, radius);
+    drawCoords(hexCoords);
 
-    ctx.beginPath();
-    ctx.fillStyle = d.properties.visited ? color(d.properties.visited) : "#dcdcdc";
-    for (let j = 0; j < hexCoords.length; j++) {
-      if (j === 0) {
-        ctx.moveTo(hexCoords[j][0], hexCoords[j][1]);
-      } else {
-        ctx.lineTo(hexCoords[j][0], hexCoords[j][1]);
-      }
-    }
+    ctx.fillStyle = d.properties.visited ? color(d.properties.visited) : color.range()[0];
     ctx.fill();
   }
 }
@@ -294,3 +270,15 @@ d3.csv("data/provinces-visited.csv").then(function(data) {
     updateMap();
   });
 });
+
+function drawCoords(coords) {
+  ctx.beginPath();
+  for (let i = 0; i < coords.length; i++) {
+    if (i === 0) {
+      ctx.moveTo(coords[i][0], coords[i][1]);
+    } else {
+      ctx.lineTo(coords[i][0], coords[i][1]);
+    }
+  }
+  ctx.closePath();
+}

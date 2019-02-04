@@ -10,11 +10,6 @@ a:link, a:visited, a:hover, a:active {
   color: #eb307c;
 }
 
-/* On mouse hover, lighten state color */
-path:hover {
-	fill-opacity: .7;
-}
-
 /* Style for Custom Tooltip */
 div.tooltip {
  	position: absolute;
@@ -35,12 +30,12 @@ div.tooltip {
 	margin: 0 auto;
 }
 
-.legend {
+/* .legend {
 	position: relative;
 	left: 250px;
 	top: 480px;
 	margin-bottom: -100px;
-}
+} */
 
 #credit {
 	text-align: center;
