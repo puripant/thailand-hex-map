@@ -231,7 +231,7 @@ d3.csv("data/provinces-visited.csv").then(function(data) {
 
       // tooltip off first
       tooltip.transition()
-        .duration(500)
+        .duration(1000)
         .style("opacity", 0);
 
       blue = ctx.getImageData(mouseX, mouseY, 1, 1).data[2]; // check blue color
@@ -247,7 +247,7 @@ d3.csv("data/provinces-visited.csv").then(function(data) {
 
         // tooltip on in the map
         tooltip.transition()
-          .duration(200)
+          .duration(100)
           .style("opacity", 0.8);
         tooltip.html(closest_hex.name_th)
           .style("left", d3.event.pageX + "px")

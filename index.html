@@ -28,15 +28,23 @@
 
 <body>
 	<div id="input" class="ui form">
-    <p class="center">ใส่ CSV ในช่องข้างล่าง</p>
+    <label for="csv-file" class="fluid ui vertical animated basic button">
+      <div class="hidden content">
+        <i class="upload icon"></i>
+      </div>
+      <div class="visible content">อัพโหลดไฟล์ CSV …</div>
+    </label>
+    <input type="file" id="csv-file" style="display: none">
+    <div class="ui horizontal divider">หรือ</div>
     <!-- <div class="field"> -->
-    <textarea rows="2" placeholder="CSV"></textarea>
+    <textarea rows="2" placeholder="พิมพ์ค่า CSV …"></textarea>
     <!-- </div> -->
     <div class="ui horizontal divider">หรือ</div>
 		<select id="provinces" class="ui fluid search dropdown" multiple="">
 			<option value="">เลือกจังหวัด …</option>
     </select>
     <div class="ui horizontal divider">หรือ</div>
+    <p class="center">คลิกบนแผนที่เลย!</p>
 	</div>
 	<div id="result"></div>
 
