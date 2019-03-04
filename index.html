@@ -27,28 +27,43 @@
 </head>
 
 <body>
-	<div id="input">
+	<div id="input" class="ui form">
+    <p class="center">ใส่ CSV ในช่องข้างล่าง</p>
+    <!-- <div class="field"> -->
+    <textarea rows="2" placeholder="CSV"></textarea>
+    <!-- </div> -->
+    <div class="ui horizontal divider">หรือ</div>
 		<select id="provinces" class="ui fluid search dropdown" multiple="">
 			<option value="">เลือกจังหวัด …</option>
-		</select>
+    </select>
+    <div class="ui horizontal divider">หรือ</div>
 	</div>
 	<div id="result"></div>
 
-	<div id="credit">
-    <a href="" download="map.png" onclick="download_canvas(this)">ดาวน์โหลดแผนที่เป็นภาพ</a>
+	<div class="center" id="credit">
+    <a href="" download="map.png" onclick="download_canvas(this)">
+      <div class="fluid ui pink vertical animated basic button" tabindex="0">
+        <div class="hidden content">ดาวน์โหลดแผนที่เป็นภาพ</div>
+        <div class="visible content">
+          <i class="download icon"></i>
+        </div>
+      </div>
+    </a>
     <br />
 		สร้างสรรค์โดย
     <div class="logo boonmeelab"><a href="https://www.facebook.com/BoonmeeLab/"><span></span></a></div>
   </div>
 
 	<!--  Adapted from https://gist.github.com/michellechandra/0b2ce4923dc9b5809922 -->
-  <script src="http://d3js.org/d3.v5.min.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://unpkg.com/topojson@3"></script>
 	<script
 	  src="https://code.jquery.com/jquery-3.1.1.min.js"
 	  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
 	  crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
+  <script src="papaparse.min.js"></script>
+
 	<script src="main.js"></script>
 </body>
 </html>
