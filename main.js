@@ -25,7 +25,29 @@ function download_canvas(el) {
   el.href = url;
 };
 
+$('input:file').on('change', function(e) {
+  Papa.parse(e.target.files[0], {
+    header: false,
+    dynamicTyping: true,
+    complete: function (results) {
+      results.data.forEach(d => {
+        // updateTextarea(d[0], 1);
+        $provinces.dropdown("set selected", d[0]);
+        updateGeo(d[0], 1);
+      });
+      updateMap();
+    }
+  });
+});
+// function parse_csv(text) {
+//   let results = Papa.parse(text, {
+//     header: true,
+//     dynamicTyping: true,
+//   });
+// };
+
 const $textarea = $("textarea#csv");
+const $provinces = $("#provinces");
 function updateTextarea(province, value) {
   if (value > 0) { //add
     $textarea.val(`${$textarea.val()}${province},1\n`);
@@ -36,22 +58,13 @@ function updateTextarea(province, value) {
     $textarea.val(lines.join("\n"));
   }
 }
-function parse_csv(text) {
-  // string
-  let results = Papa.parse(csvString, {
-    header: true,
-    dynamicTyping: true,
-  });
-
-  // file
-  Papa.parse(fileInput.files[0], {
-    header: true,
-    dynamicTyping: true,
-    complete: function (results) {
-      console.log(results);
-    }
-  });
-};
+function onKeyPress() {
+  let key = window.event.keyCode;
+  if (key === 13) { // Enter key
+    // TODO update dropdown & map
+    console.log("entered");
+  }
+}
 
 // Append div for tooltip
 let tooltip = d3.select("body").append("div")
@@ -223,7 +236,6 @@ d3.csv("data/provinces-visited.csv").then(function(data) {
   provinces = data;
 
   // dropdown
-  let $provinces = $("#provinces");
   provinces.forEach(function(row) {
     $provinces.append($("<option>", {
       value: row.province,
@@ -302,14 +314,6 @@ d3.csv("data/provinces-visited.csv").then(function(data) {
     updateMap();
   });
 });
-
-function onKeyPress() {
-  let key = window.event.keyCode;
-  if (key === 13) { // Enter key
-    // TODO update dropdown & map
-    console.log("entered");
-  }
-}
 
 function drawCoords(coords) {
   ctx.beginPath();
