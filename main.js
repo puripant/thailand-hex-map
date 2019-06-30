@@ -25,6 +25,34 @@ function download_canvas(el) {
   el.href = url;
 };
 
+const $textarea = $("textarea#csv");
+function updateTextarea(province, value) {
+  if (value > 0) { //add
+    $textarea.val(`${$textarea.val()}${province},1\n`);
+
+  } else { //remove
+    let lines = $textarea.val().split("\n");
+    lines.splice(lines.indexOf(`${province},1`), 1);
+    $textarea.val(lines.join("\n"));
+  }
+}
+function parse_csv(text) {
+  // string
+  let results = Papa.parse(csvString, {
+    header: true,
+    dynamicTyping: true,
+  });
+
+  // file
+  Papa.parse(fileInput.files[0], {
+    header: true,
+    dynamicTyping: true,
+    complete: function (results) {
+      console.log(results);
+    }
+  });
+};
+
 // Append div for tooltip
 let tooltip = d3.select("body").append("div")
   .attr("class", "tooltip")
@@ -205,10 +233,12 @@ d3.csv("data/provinces-visited.csv").then(function(data) {
   $('.ui.dropdown')
     .dropdown({
       onAdd: function(value, text, $selectedItem) {
+        updateTextarea(value, 1);
         updateGeo(value, 1);
         updateMap();
       },
       onRemove: function(value, text, $selectedItem) {
+        updateTextarea(value, 0);
         updateGeo(value, 0);
         updateMap();
       }
@@ -257,10 +287,12 @@ d3.csv("data/provinces-visited.csv").then(function(data) {
     .on("click", function () {
       if (blue > 0) { // map area
         if (blue > 200) { // unselected
-          $("#provinces").dropdown("set selected", closest_hex.name);
+          // updateTextarea(closest_hex.name, 1);
+          $provinces.dropdown("set selected", closest_hex.name);
           updateGeo(closest_hex.name, 1);
         } else { // already selected
-          $("#provinces").dropdown("remove selected", closest_hex.name);
+          updateTextarea(closest_hex.name, 0);
+          $provinces.dropdown("remove selected", closest_hex.name);
           updateGeo(closest_hex.name, 0);
         }
         updateMap();
@@ -270,6 +302,14 @@ d3.csv("data/provinces-visited.csv").then(function(data) {
     updateMap();
   });
 });
+
+function onKeyPress() {
+  let key = window.event.keyCode;
+  if (key === 13) { // Enter key
+    // TODO update dropdown & map
+    console.log("entered");
+  }
+}
 
 function drawCoords(coords) {
   ctx.beginPath();
