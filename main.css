@@ -6,7 +6,7 @@ body {
 }
 
 a:link, a:visited, a:hover, a:active {
-  font-size: 1.8em;
+  /* font-size: 1.8em; */
   color: #eb307c;
 }
 
@@ -65,6 +65,7 @@ div.tooltip {
 .boonmeelab {
   background-image: url('logo_boonmeelab.png');
   width: 150px;
+  margin: 0 -10px;
 }
 
 .ui.search.dropdown .menu {
