@@ -39,12 +39,6 @@ $('input:file').on('change', function(e) {
     }
   });
 });
-// function parse_csv(text) {
-//   let results = Papa.parse(text, {
-//     header: true,
-//     dynamicTyping: true,
-//   });
-// };
 
 const $textarea = $("textarea#csv");
 const $provinces = $("#provinces");
@@ -58,13 +52,22 @@ function updateTextarea(province, value) {
     $textarea.val(lines.join("\n"));
   }
 }
-function onKeyPress() {
-  let key = window.event.keyCode;
-  if (key === 13) { // Enter key
-    // TODO update dropdown & map
-    console.log("entered");
-  }
-}
+// function onKeyPress() {
+//   let key = window.event.keyCode;
+//   if (key === 13) { // Enter key
+//     let results = Papa.parse($textarea.val(), {
+//       header: false,
+//       dynamicTyping: true,
+//     });
+
+//     results.data.forEach(d => {
+//       // updateTextarea(d[0], 1);
+//       $provinces.dropdown((+d[1] ? "set" : "remove") + " selected", d[0]);
+//       updateGeo(d[0], d[1]);
+//     });
+//     updateMap();
+//   }
+// }
 
 // Append div for tooltip
 let tooltip = d3.select("body").append("div")
