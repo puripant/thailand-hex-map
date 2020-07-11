@@ -1680,7 +1680,7 @@
           "NAME_1": "Phetchaburi",
           "TYPE_1": "Changwat",
           "ENGTYPE_1": "Province",
-          "NL_NAME_1": "จังหวัดเพชรบุรี",
+          "NL_NAME_1": "เพชรบุรี",
           "ISO": 76,
           "VARNAME_1": "Phetcha Buri|Bejraburi|Petchburi|Phet Buri|Tetchburit"
         }
@@ -1736,7 +1736,7 @@
           "NAME_1": "Phra Nakhon Si Ayutthaya",
           "TYPE_1": "Changwat",
           "ENGTYPE_1": "Province",
-          "NL_NAME_1": "อยุธยา",
+          "NL_NAME_1": "พระนครศรีอยุธยา",
           "ISO": 14,
           "VARNAME_1": "Phranakhon Si Ayutthaya|Ayudhya|Ayutthaya|Phranakhornsri-ayuthaya"
         }
@@ -1753,7 +1753,7 @@
           "NAME_1": "Phrae",
           "TYPE_1": "Changwat",
           "ENGTYPE_1": "Province",
-          "NL_NAME_1": "จังหวัดแพร่",
+          "NL_NAME_1": "แพร่",
           "ISO": 54,
           "VARNAME_1": null
         }
